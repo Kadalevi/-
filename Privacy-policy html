@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Politique de confidentialité — Lueur</title>
+<style>
+  body { max-width:640px; margin:40px auto; padding:0 16px; font-family: Georgia, serif; line-height:1.6; color:#222; }
+  h1 { font-size:24px; } h2 { font-size:18px; margin-top:28px; }
+  a { color:#B5651D; }
+</style>
+</head>
+<body>
+<h1>Politique de confidentialité</h1>
+<p><em>Dernière mise à jour : [DATE À COMPLÉTER]</em></p>
+
+<p>Lueur ("nous", "l'application") respecte ta vie privée. Cette page explique quelles données sont collectées et pourquoi.
+[À personnaliser avec ton nom / ta société avant publication.]</p>
+
+<h2>1. Données que tu écris (journal)</h2>
+<p>Le contenu de ton journal est traité pour générer une réponse de réflexion (via l'API Claude d'Anthropic). [Préciser : est-il stocké ? où ? combien de temps ?]</p>
+
+<h2>2. Cookies et publicité</h2>
+<p>Ce site utilise Google AdSense. Google peut utiliser des cookies pour des publicités personnalisées. Gère tes préférences sur
+<a href="https://adssettings.google.com" target="_blank" rel="noopener">adssettings.google.com</a>.</p>
+
+<h2>3. Tes droits (RGPD)</h2>
+<p>Tu peux demander l'accès, la correction ou la suppression de tes données en écrivant à [TON EMAIL].</p>
+
+<h2>4. Contact</h2>
+<p>[TON EMAIL / NOM / ADRESSE]</p>
+</body>
+</html>
