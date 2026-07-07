@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Lueur — journal du soir</title>
+<meta name="description" content="Un espace pour se dire les choses, avant de les dire aux autres." />
+<meta name="theme-color" content="#14213D" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="icon.svg" />
+
+<!--
+  ADSENSE — active seulement une fois ton compte est approuvé.
+  1. Remplace ca-pub-XXXXXXXXXXXXXXXX par ton ID client (dans AdSense > Compte > Infos).
+  2. Décommente la ligne <script> ci-dessous.
+  3. Dans le JS plus bas, renseigne ADSENSE_CLIENT et ADSENSE_SLOT.
+-->
+<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+
+<style>
+  :root {
+    --bg1:#0B0F19; --bg2:#14213D; --bg3:#16244A;
+    --cream:#F5EFE6; --amber:#F2A65A; --lavender:#8E8FFA;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; min-height:100vh;
+    background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 55%, var(--bg3) 100%);
+    color: var(--cream);
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    display:flex; justify-content:center;
+    padding: 32px 16px 64px;
+  }
+  .app { width:100%; max-width:480px; }
+  .langs { display:flex; justify-content:center; gap:6px; margin-bottom:18px; }
+  .langs button {
+    padding:4px 10px; border-radius:999px; font-size:11.5px; cursor:pointer;
+    border:1.5px solid rgba(245,239,230,0.15); background:transparent; color:var(--cream);
+  }
+  .langs button.active { border-color: var(--amber); background: rgba(242,166,90,0.15); }
+  header { text-align:center; margin-bottom:24px; }
+  .title { font-family: Georgia, 'Times New Roman', serif; font-style:italic; font-size:30px; }
+  .tagline { font-size:12.5px; opacity:.55; margin-top:4px; letter-spacing:.4px; }
+  .lantern {
+    width:84px; height:84px; border-radius:50%; margin:0 auto;
+    display:flex; align-items:center; justify-content:center;
+    background: radial-gradient(circle at 50% 45%, rgba(242,166,90,.95), rgba(242,166,90,.15) 60%, transparent 72%);
+    transition: box-shadow 600ms ease;
+  }
+  .lantern .core { width:14px; height:14px; border-radius:50%; background:#FFE3B8; box-shadow:0 0 12px 4px rgba(255,227,184,.9); }
+  .moods { display:flex; gap:8px; justify-content:center; margin: 18px 0; flex-wrap:wrap; }
+  .moods button {
+    padding:6px 14px; border-radius:999px; font-size:13px; cursor:pointer;
+    border:1.5px solid rgba(245,239,230,0.15); background:transparent; color:var(--cream);
+  }
+  .moods button.active { border-color: var(--amber); background: rgba(242,166,90,0.15); }
+  .card { background: rgba(245,239,230,0.04); border:1px solid rgba(245,239,230,0.1); border-radius:18px; padding:18px; }
+  textarea {
+    width:100%; background:transparent; border:none; outline:none; resize:none;
+    color:var(--cream); font-family: Georgia, serif; font-size:17px; line-height:1.6;
+  }
+  .row-end { display:flex; justify-content:flex-end; margin-top:8px; }
+  .btn-primary {
+    background:var(--amber); color:var(--bg2); border:none; border-radius:12px;
+    padding:10px 18px; font-weight:700; font-size:14px; cursor:pointer;
+  }
+  .btn-primary:disabled { background: rgba(245,239,230,0.1); color: rgba(245,239,230,0.4); cursor:default; }
+  .btn-ghost {
+    flex:1; background:transparent; border:1px solid rgba(245,239,230,0.25); color:var(--cream);
+    border-radius:12px; padding:10px 0; font-size:13.5px; cursor:pointer;
+  }
+  .reflection {
+    margin-top:28px; background: rgba(142,143,250,0.1); border:1px solid rgba(142,143,250,0.3);
+    border-radius:18px; padding:18px; font-family: Georgia, serif; font-size:16px; line-height:1.6;
+  }
+  .actions { display:flex; gap:10px; margin-top:16px; }
+  .suggestion { margin-top:28px; }
+  .sponsor {
+    margin-top:14px; background: rgba(242,166,90,0.08); border:1px dashed rgba(242,166,90,0.4);
+    border-radius:18px; padding:16px;
+  }
+  .sponsor .label { font-size:11px; opacity:.55; letter-spacing:.5px; margin-bottom:6px; }
+  .err { color:#F29A9A; font-size:13px; margin-top:10px; }
+  .foot { margin-top:32px; font-size:12px; opacity:.4; text-align:center; }
+  .hidden { display:none !important; }
+  .install-banner {
+    position:fixed; left:16px; right:16px; bottom:16px; max-width:448px; margin:0 auto;
+    background: var(--amber); color: var(--bg2); border-radius:14px; padding:12px 16px;
+    display:flex; align-items:center; justify-content:space-between; font-size:13px; font-weight:600;
+    box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  }
+  .install-banner button { background:var(--bg2); color:var(--cream); border:none; border-radius:8px; padding:6px 10px; font-size:12px; cursor:pointer; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="langs" id="langs"></div>
+  <header>
+    <div class="title">Lueur</div>
+    <div class="tagline" id="tagline"></div>
+  </header>
+
+  <div class="lantern" id="lantern"><div class="core"></div></div>
+
+  <!-- WRITE STAGE -->
+  <div id="stage-write" style="margin-top:28px;">
+    <div class="moods" id="moods"></div>
+    <div class="card">
+      <textarea id="entry" rows="5"></textarea>
+      <div class="row-end">
+        <button class="btn-primary" id="submitBtn"></button>
+      </div>
+    </div>
+    <div class="err hidden" id="errBox"></div>
+  </div>
+
+  <!-- REFLECT STAGE -->
+  <div id="stage-reflect" class="hidden">
+    <div class="reflection" id="reflectionText"></div>
+    <div class="actions">
+      <button class="btn-ghost" id="writeMoreBtn"></button>
+      <button class="btn-primary" style="flex:1" id="continueBtn"></button>
+    </div>
+  </div>
+
+  <!-- CONNECT STAGE -->
+  <div id="stage-connect" class="hidden">
+    <div class="card suggestion">
+      <div style="font-size:13px; opacity:.6; margin-bottom:6px;" id="suggTitle"></div>
+      <div style="font-family:Georgia,serif; font-size:16px; line-height:1.6;" id="suggBody"></div>
+      <button class="btn-ghost" style="margin-top:12px; border-color:#8E8FFA; color:#C7C8FF;" id="echoBtn"></button>
+    </div>
+    <div class="sponsor" id="sponsorMock">
+      <div class="label" id="sponsorLabel"></div>
+      <div id="sponsorBody" style="font-size:14.5px; line-height:1.5;"></div>
+      <button class="btn-ghost" style="margin-top:10px; border-color:rgba(242,166,90,.5); color:var(--amber);" id="discoverBtn"></button>
+    </div>
+
+    <!-- Real AdSense native ad slot — shown instead of the mock above once
+         ADSENSE_CLIENT / ADSENSE_SLOT are configured in the script below. -->
+    <div class="sponsor hidden" id="sponsorReal" style="border-style:solid;">
+      <div class="label">PUBLICITÉ</div>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-format="fluid"
+           data-ad-layout-key="-fb+5w+4e-db+86"
+           data-ad-client=""
+           data-ad-slot=""></ins>
+    </div>
+    <button class="btn-ghost" style="margin-top:14px;" id="newEntryBtn"></button>
+  </div>
+
+  <div class="foot hidden" id="footCount"></div>
+</div>
+
+<div class="install-banner hidden" id="installBanner">
+  <span id="installText">Installer Lueur sur cet appareil</span>
+  <button id="installBtn">Installer</button>
+</div>
+
+<script>
+const T = {
+  fr: {
+    tagline: "un espace pour se dire les choses, avant de les dire aux autres",
+    moods: ["Lourd","Flou","Calme","Léger"],
+    placeholder: "Ce soir, ce qui pèse ou ce qui flotte en toi…",
+    submit: "Déposer ces mots", loading: "…",
+    error: "La connexion a échoué. Ton texte reste ici, réessaie.",
+    writeMore: "Écrire encore", continue: "Continuer",
+    suggTitle: "Suggestion douce",
+    suggBody: "Trois autres personnes ont écrit cette semaine sur un ressenti proche du tien. Tu peux lire un extrait anonymisé, sans obligation de répondre.",
+    echo: "Voir ces échos →",
+    sponsorLabel: "PARTENAIRE BIEN-ÊTRE · SPONSORISÉ",
+    sponsorBody: "🌙 Respire 5 minutes — une séance audio guidée pour relâcher la soirée.",
+    discover: "Découvrir", newEntry: "Nouvelle entrée",
+    count: n => `${n} entrée${n>1?"s":""} déposée${n>1?"s":""} ce soir`,
+    installText: "Installer Lueur sur cet appareil", install: "Installer",
+    fallback: (mood) => `Merci d'avoir posé ça ici${mood ? `, avec ce ressenti ${mood.toLowerCase()}` : ""}. Ce que tu portes ce soir compte, même quand les mots sont difficiles à trouver. Qu'est-ce qui t'aiderait le plus, là, maintenant ?`,
+  },
+  en: {
+    tagline: "a space to say things to yourself, before saying them to others",
+    moods: ["Heavy","Foggy","Calm","Light"],
+    placeholder: "Tonight, what's weighing on you or drifting through you…",
+    submit: "Set these words down", loading: "…",
+    error: "The connection failed. Your text is still here, try again.",
+    writeMore: "Keep writing", continue: "Continue",
+    suggTitle: "A gentle suggestion",
+    suggBody: "Three other people wrote this week about a feeling close to yours. You can read an anonymized excerpt, no obligation to reply.",
+    echo: "See these echoes →",
+    sponsorLabel: "WELLNESS PARTNER · SPONSORED",
+    sponsorBody: "🌙 Breathe for 5 minutes — a guided audio session to release the evening.",
+    discover: "Discover", newEntry: "New entry",
+    count: n => `${n} ${n>1?"entries":"entry"} written tonight`,
+    installText: "Install Lueur on this device", install: "Install",
+    fallback: (mood) => `Thank you for putting this down${mood ? `, with that ${mood.toLowerCase()} feeling` : ""}. What you're carrying tonight matters, even when words are hard to find. What would help most, right now?`,
+  },
+  es: {
+    tagline: "un espacio para decirte las cosas, antes de decírselas a otros",
+    moods: ["Pesado","Difuso","Calma","Ligero"],
+    placeholder: "Esta noche, lo que pesa o lo que flota en ti…",
+    submit: "Dejar estas palabras", loading: "…",
+    error: "Falló la conexión. Tu texto sigue aquí, inténtalo de nuevo.",
+    writeMore: "Seguir escribiendo", continue: "Continuar",
+    suggTitle: "Una sugerencia suave",
+    suggBody: "Otras tres personas escribieron esta semana sobre algo parecido a lo que sientes. Puedes leer un fragmento anónimo, sin obligación de responder.",
+    echo: "Ver estos ecos →",
+    sponsorLabel: "SOCIO DE BIENESTAR · PATROCINADO",
+    sponsorBody: "🌙 Respira 5 minutos — una sesión de audio guiada para soltar la noche.",
+    discover: "Descubrir", newEntry: "Nueva entrada",
+    count: n => `${n} entrada${n>1?"s":""} escrita${n>1?"s":""} esta noche`,
+    installText: "Instalar Lueur en este dispositivo", install: "Instalar",
+    fallback: (mood) => `Gracias por dejar esto aquí${mood ? `, con ese sentir ${mood.toLowerCase()}` : ""}. Lo que llevas esta noche importa, incluso cuando cuesta encontrar las palabras. ¿Qué te ayudaría más, ahora mismo?`,
+  },
+};
+
+// --- AdSense config ---------------------------------------------------
+// Renseigne ces deux valeurs une fois ton compte AdSense approuvé et un
+// bloc "In-feed" ou "In-article" créé. Laisse vide pour garder l'encart
+// sponsorisé factice (mock) affiché à la place.
+const ADSENSE_CLIENT = "";   // ex: "ca-pub-1234567890123456"
+const ADSENSE_SLOT = "";     // ex: "9876543210"
+
+let lang = "fr";
+let mood = null;
+let history = [];
+
+const el = id => document.getElementById(id);
+
+function renderLangs() {
+  el("langs").innerHTML = ["fr","en","es"].map(l =>
+    `<button data-lang="${l}" class="${l===lang?'active':''}">${l.toUpperCase()}</button>`
+  ).join("");
+  el("langs").querySelectorAll("button").forEach(b => {
+    b.onclick = () => { lang = b.dataset.lang; mood = null; renderAll(); };
+  });
+}
+
+function renderMoods() {
+  const t = T[lang];
+  el("moods").innerHTML = t.moods.map(m =>
+    `<button data-mood="${m}" class="${mood===m?'active':''}">${m}</button>`
+  ).join("");
+  el("moods").querySelectorAll("button").forEach(b => {
+    b.onclick = () => { mood = b.dataset.mood; renderMoods(); };
+  });
+}
+
+function renderAll() {
+  const t = T[lang];
+  document.documentElement.lang = lang;
+  renderLangs();
+  el("tagline").textContent = t.tagline;
+  renderMoods();
+  el("entry").placeholder = t.placeholder;
+  el("submitBtn").textContent = t.submit;
+  el("writeMoreBtn").textContent = t.writeMore;
+  el("continueBtn").textContent = t.continue;
+  el("suggTitle").textContent = t.suggTitle;
+  el("suggBody").textContent = t.suggBody;
+  el("echoBtn").textContent = t.echo;
+  el("sponsorLabel").textContent = t.sponsorLabel;
+  el("sponsorBody").textContent = t.sponsorBody;
+  el("discoverBtn").textContent = t.discover;
+  el("newEntryBtn").textContent = t.newEntry;
+  el("installText").textContent = t.installText;
+  el("installBtn").textContent = t.install;
+  updateFoot();
+}
+
+function updateLantern() {
+  const entry = el("entry").value.trim();
+  const level = Math.min(entry.length / 400, 1);
+  const glow = 10 + level * 26;
+  el("lantern").style.boxShadow = `0 0 ${glow}px ${glow/2}px rgba(242,166,90,${0.25 + level*0.35})`;
+}
+
+function updateFoot() {
+  const foot = el("footCount");
+  if (history.length > 0) {
+    foot.textContent = T[lang].count(history.length);
+    foot.classList.remove("hidden");
+  } else {
+    foot.classList.add("hidden");
+  }
+}
+
+function showStage(stage) {
+  ["write","reflect","connect"].forEach(s => {
+    el("stage-"+s).classList.toggle("hidden", s !== stage);
+  });
+}
+
+async function submitEntry() {
+  const text = el("entry").value.trim();
+  if (!text) return;
+  const t = T[lang];
+  const btn = el("submitBtn");
+  btn.disabled = true;
+  btn.textContent = t.loading;
+  el("errBox").classList.add("hidden");
+  try {
+    const res = await fetch("/api/reflect", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ lang, mood, text }),
+    });
+    if (!res.ok) throw new Error("bad response");
+    const data = await res.json();
+    el("reflectionText").textContent = data.reflection || t.fallback(mood);
+  } catch (e) {
+    el("reflectionText").textContent = t.fallback(mood);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = t.submit;
+  }
+  history.push({ text, mood, at: Date.now() });
+  showStage("reflect");
+}
+
+el("entry").addEventListener("input", updateLantern);
+el("submitBtn").addEventListener("click", submitEntry);
+el("writeMoreBtn").addEventListener("click", () => {
+  el("entry").value = ""; mood = null; renderMoods(); updateLantern();
+  showStage("write");
+});
+el("continueBtn").addEventListener("click", () => {
+  showStage("connect");
+  maybeRenderRealAd();
+});
+
+let adRendered = false;
+function maybeRenderRealAd() {
+  if (!ADSENSE_CLIENT || !ADSENSE_SLOT || adRendered) return;
+  const hasConsent = window.__lueurAdConsent === true;
+  if (!hasConsent) return;
+  el("sponsorMock").classList.add("hidden");
+  const real = el("sponsorReal");
+  real.classList.remove("hidden");
+  const ins = real.querySelector(".adsbygoogle");
+  ins.setAttribute("data-ad-client", ADSENSE_CLIENT);
+  ins.setAttribute("data-ad-slot", ADSENSE_SLOT);
+  try {
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
+    adRendered = true;
+  } catch (e) { /* AdSense script not loaded yet, mock stays visible */ }
+}
+el("newEntryBtn").addEventListener("click", () => {
+  el("entry").value = ""; mood = null; renderMoods(); updateLantern();
+  showStage("write"); updateFoot();
+});
+
+renderAll();
+updateLantern();
+
+// --- PWA install prompt ---
+let deferredPrompt;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  el("installBanner").classList.remove("hidden");
+});
+el("installBtn").addEventListener("click", async () => {
+  el("installBanner").classList.add("hidden");
+  if (deferredPrompt) { deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; }
+});
+
+// --- Service worker registration ---
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
